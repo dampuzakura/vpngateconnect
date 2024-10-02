@@ -17,12 +17,8 @@ $preSharedKey = "vpn"  # 事前共有鍵
 if (Get-VpnConnection -Name $vpnName -ErrorAction SilentlyContinue) {
     Write-Host "VPN接続がすでに存在します。"
 } else {
-    Add-VpnConnection -Name $vpnName -ServerAddress $vpnServer -TunnelType L2tp -EncryptionLevel Required -AuthenticationMethod MSChapv2 -SplitTunneling -RememberCredential -PassThru
+    Add-VpnConnection -Name $vpnName -ServerAddress $vpnServer -TunnelType L2tp -L2tpPsk $preSharedKey -AuthenticationMethod MSChapv2 -Force
 }
-
-# 認証情報の保存
-$securePassword = ConvertTo-SecureString $password -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential($username, $securePassword)
 
 # VPN接続の開始
 rasdial $vpnName $username $password
